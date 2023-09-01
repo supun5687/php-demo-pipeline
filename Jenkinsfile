@@ -4,31 +4,38 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Check out the code from a Git repository
-                echo 'CHECKOUT'
+                // Check out the code from the Git repository
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Copy to Docker Container') {
             steps {
-                // Build your code (you can replace this with your build tool)
-                echo 'BUILD application'
-            }
-        }
+                script {
+                    // Define your Docker container name
+                    def dockerContainerName = 'jenkins-container-php'
 
-        stage('Test') {
-            steps {
-                // Run your tests (you can replace this with your testing framework)
-                echo 'TEST application'
-            }
-        }
-
-        stage('Deploy to Test') {
-            steps {
-                // Deploy the code to a test environment
-                echo 'DEPLOY application'
+                    // Copy the repository to the Docker container
+                    sh "docker cp . ${dockerContainerName}:/var/www/html"
+                }
             }
         }
     }
+
+    post {
+        success {
+            // This block of steps will execute if the pipeline is successful
+            echo 'Repository copied to Docker container successfully!'
+        }
+
+        failure {
+            // This block of steps will execute if the pipeline fails
+            echo 'Pipeline failed!'
+        }
+
+        always {
+            // This block of steps will always execute, regardless of success or failure
+            // For example, you can clean up resources here
+        }
+    }
 }
-    
