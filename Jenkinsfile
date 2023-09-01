@@ -33,9 +33,6 @@ pipeline {
             echo 'Pipeline failed!'
         }
 
-        always {
-            // This block of steps will always execute, regardless of success or failure
-            // For example, you can clean up resources here
-        }
+        
     }
 }
